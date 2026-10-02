@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="no-referrer">
-    <title>Notion Weather Card - Compact Serif</title>
+    <title>Notion Weather Card - Lining Serif</title>
+    <!-- Import Lora with full weight range -->
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap');
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -13,8 +16,10 @@
         }
 
         body {
-            /* Targeting Notion's specific serif font stack for consistency */
-            font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", serif;
+            /* Primary: Lora with fallback to standard lining serifs */
+            font-family: 'Lora', Century Schoolbook, Millinery, Georgia, serif;
+            /* Enforces uniform baseline alignment (lining-nums) and equal widths (tabular-nums) */
+            font-variant-numeric: lining-nums tabular-nums;
             height: 100vh;
             width: 100vw;
             display: flex;
@@ -22,19 +27,18 @@
             justify-content: center;
             background-color: transparent;
             overflow: hidden;
-            font-feature-settings: 'kern' 1, 'liga' 1; /* Optimize serif rendering */
+            font-feature-settings: 'lnum' 1, 'tnum' 1;
         }
 
         .card {
             width: 100%;
             height: 100%;
-            padding: 16px 22px; /* Scaled down padding (was 24/32) */
+            padding: 16px 22px;
             border-radius: 0px; /* Non-rounded edges */
             display: flex;
             justify-content: space-between;
             align-items: center;
             color: #ffffff;
-            /* Blue gradient similar to initial reference */
             background: linear-gradient(135deg, #2b7fff, #1a5bb8);
             transition: background 1s ease;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
@@ -48,22 +52,22 @@
         }
 
         .date-text {
-            font-size: 0.77rem; /* Scaled down (1.15rem / 1.5) */
+            font-size: 0.77rem;
             font-weight: 500;
             letter-spacing: 0.2px;
             opacity: 0.92;
         }
 
         .time-text {
-            font-size: 2.53rem; /* Scaled down (3.8rem / 1.5) */
-            font-weight: 800;
-            letter-spacing: -1.0px; /* Adjusted letter spacing for serif text */
+            font-size: 2.53rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
             line-height: 1;
-            margin: 2px 0; /* Scaled down margin */
+            margin: 2px 0;
         }
 
         .location-text {
-            font-size: 0.7rem; /* Scaled down (1.05rem / 1.5) */
+            font-size: 0.7rem;
             font-weight: 400;
             opacity: 0.88;
         }
@@ -71,12 +75,12 @@
         .right-col {
             display: flex;
             align-items: center;
-            gap: 11px; /* Scaled down gap (was 16px) */
+            gap: 11px;
         }
 
         .weather-icon-container {
-            width: 45px; /* Scaled down icon size (68px / 1.5) */
-            height: 45px; /* Scaled down icon size (68px / 1.5) */
+            width: 45px;
+            height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -85,13 +89,13 @@
         .weather-icon-container svg {
             width: 100%;
             height: 100%;
-            filter: drop-shadow(0 1px 3px rgba(0,0,0,0.15)); /* Softer drop shadow for smaller icons */
+            filter: drop-shadow(0 1px 3px rgba(0,0,0,0.15));
         }
 
         .temp-text {
-            font-size: 2.4rem; /* Scaled down (3.6rem / 1.5) */
-            font-weight: 300;
-            letter-spacing: -1px;
+            font-size: 2.4rem;
+            font-weight: 400;
+            letter-spacing: -0.5px;
             line-height: 1;
         }
     </style>
@@ -111,7 +115,6 @@
     </div>
 
     <script>
-        // Minimalist Vector SVG Weather Icons (Remains exact same, logic unaffected by styling changes)
         const svgIcons = {
             sun: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`,
             moon: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`,
@@ -126,13 +129,10 @@
 
         function updateTimeAndDate() {
             const now = new Date();
-
-            // 24-Hour Time Format (HH:MM)
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             document.getElementById('time').innerText = `${hours}:${minutes}`;
 
-            // Formatted Date: "Friday, October 02"
             const options = { weekday: 'long', month: 'long', day: '2-digit' };
             document.getElementById('date').innerText = now.toLocaleDateString('en-US', options);
         }
@@ -142,7 +142,6 @@
 
         async function fetchWeather() {
             try {
-                // Coordinates for Courtenay, BC
                 const lat = 49.6866;
                 const lon = -124.9936;
                 const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
@@ -156,40 +155,39 @@
 
                 document.getElementById('temp').innerText = `${temp}°`;
 
-                // Weather Condition to Theme Mapping (Colors & Icons adjusted dynamically)
                 let themeGradient = 'linear-gradient(135deg, #2b7fff, #1a5bb8)';
                 let selectedIcon = svgIcons.sun;
 
-                if (code === 0) { // Clear Sky
+                if (code === 0) {
                     if (isDay) {
-                        themeGradient = 'linear-gradient(135deg, #2575fc, #1a5bb8)'; // Bright sky blue
+                        themeGradient = 'linear-gradient(135deg, #2575fc, #1a5bb8)';
                         selectedIcon = svgIcons.sun;
                     } else {
-                        themeGradient = 'linear-gradient(135deg, #0f172a, #1e293b)'; // Midnight dark
+                        themeGradient = 'linear-gradient(135deg, #0f172a, #1e293b)';
                         selectedIcon = svgIcons.moon;
                     }
-                } else if (code >= 1 && code <= 2) { // Mainly Clear / Partly Cloudy
+                } else if (code >= 1 && code <= 2) {
                     if (isDay) {
-                        themeGradient = 'linear-gradient(135deg, #3b82f6, #1d4ed8)'; // Mild day blue
+                        themeGradient = 'linear-gradient(135deg, #3b82f6, #1d4ed8)';
                         selectedIcon = svgIcons.cloudSun;
                     } else {
-                        themeGradient = 'linear-gradient(135deg, #1e293b, #334155)'; // Mild night slate
+                        themeGradient = 'linear-gradient(135deg, #1e293b, #334155)';
                         selectedIcon = svgIcons.cloudMoon;
                     }
-                } else if (code === 3) { // Overcast
-                    themeGradient = 'linear-gradient(135deg, #475569, #334155)'; // Dark slate gray
+                } else if (code === 3) {
+                    themeGradient = 'linear-gradient(135deg, #475569, #334155)';
                     selectedIcon = svgIcons.cloud;
-                } else if (code === 45 || code === 48) { // Fog
-                    themeGradient = 'linear-gradient(135deg, #52525b, #3f3f46)'; // Dim gray
+                } else if (code === 45 || code === 48) {
+                    themeGradient = 'linear-gradient(135deg, #52525b, #3f3f46)';
                     selectedIcon = svgIcons.fog;
-                } else if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) { // Drizzle & Rain
-                    themeGradient = 'linear-gradient(135deg, #1e3a8a, #0f172a)'; // Deep rain blue/black
+                } else if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) {
+                    themeGradient = 'linear-gradient(135deg, #1e3a8a, #0f172a)';
                     selectedIcon = svgIcons.rain;
-                } else if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) { // Snow
-                    themeGradient = 'linear-gradient(135deg, #0284c7, #0369a1)'; // Light snow cyan
+                } else if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) {
+                    themeGradient = 'linear-gradient(135deg, #0284c7, #0369a1)';
                     selectedIcon = svgIcons.snow;
-                } else if (code >= 95) { // Thunderstorm
-                    themeGradient = 'linear-gradient(135deg, #311b92, #1a237e)'; // Dark purple/navy
+                } else if (code >= 95) {
+                    themeGradient = 'linear-gradient(135deg, #311b92, #1a237e)';
                     selectedIcon = svgIcons.thunderstorm;
                 }
 
@@ -197,14 +195,13 @@
                 document.getElementById('icon').innerHTML = selectedIcon;
 
             } catch (err) {
-                // Fallback on error
                 document.getElementById('temp').innerText = '--°';
                 document.getElementById('icon').innerHTML = svgIcons.cloud;
             }
         }
 
         fetchWeather();
-        setInterval(fetchWeather, 1800000); // Refreshes every 30 minutes
+        setInterval(fetchWeather, 1800000);
     </script>
 </body>
 </html>
