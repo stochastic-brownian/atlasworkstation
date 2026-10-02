@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="no-referrer">
-    <title>Notion Weather Card</title>
+    <title>Notion Weather Card - Compact Serif</title>
     <style>
         * {
             box-sizing: border-box;
@@ -13,7 +13,8 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            /* Targeting Notion's specific serif font stack for consistency */
+            font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", serif;
             height: 100vh;
             width: 100vw;
             display: flex;
@@ -21,20 +22,22 @@
             justify-content: center;
             background-color: transparent;
             overflow: hidden;
+            font-feature-settings: 'kern' 1, 'liga' 1; /* Optimize serif rendering */
         }
 
         .card {
             width: 100%;
             height: 100%;
-            padding: 24px 32px;
-            border-radius: 20px;
+            padding: 16px 22px; /* Scaled down padding (was 24/32) */
+            border-radius: 0px; /* Non-rounded edges */
             display: flex;
             justify-content: space-between;
             align-items: center;
             color: #ffffff;
+            /* Blue gradient similar to initial reference */
             background: linear-gradient(135deg, #2b7fff, #1a5bb8);
             transition: background 1s ease;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
         }
 
         .left-col {
@@ -45,22 +48,22 @@
         }
 
         .date-text {
-            font-size: 1.15rem;
+            font-size: 0.77rem; /* Scaled down (1.15rem / 1.5) */
             font-weight: 500;
             letter-spacing: 0.2px;
             opacity: 0.92;
         }
 
         .time-text {
-            font-size: 3.8rem;
+            font-size: 2.53rem; /* Scaled down (3.8rem / 1.5) */
             font-weight: 800;
-            letter-spacing: -1.5px;
+            letter-spacing: -1.0px; /* Adjusted letter spacing for serif text */
             line-height: 1;
-            margin: 4px 0;
+            margin: 2px 0; /* Scaled down margin */
         }
 
         .location-text {
-            font-size: 1.05rem;
+            font-size: 0.7rem; /* Scaled down (1.05rem / 1.5) */
             font-weight: 400;
             opacity: 0.88;
         }
@@ -68,12 +71,12 @@
         .right-col {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 11px; /* Scaled down gap (was 16px) */
         }
 
         .weather-icon-container {
-            width: 68px;
-            height: 68px;
+            width: 45px; /* Scaled down icon size (68px / 1.5) */
+            height: 45px; /* Scaled down icon size (68px / 1.5) */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -82,11 +85,11 @@
         .weather-icon-container svg {
             width: 100%;
             height: 100%;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+            filter: drop-shadow(0 1px 3px rgba(0,0,0,0.15)); /* Softer drop shadow for smaller icons */
         }
 
         .temp-text {
-            font-size: 3.6rem;
+            font-size: 2.4rem; /* Scaled down (3.6rem / 1.5) */
             font-weight: 300;
             letter-spacing: -1px;
             line-height: 1;
@@ -108,7 +111,7 @@
     </div>
 
     <script>
-        // Minimalist Vector SVG Weather Icons
+        // Minimalist Vector SVG Weather Icons (Remains exact same, logic unaffected by styling changes)
         const svgIcons = {
             sun: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`,
             moon: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`,
@@ -153,40 +156,40 @@
 
                 document.getElementById('temp').innerText = `${temp}°`;
 
-                // Weather Condition to Theme Mapping
+                // Weather Condition to Theme Mapping (Colors & Icons adjusted dynamically)
                 let themeGradient = 'linear-gradient(135deg, #2b7fff, #1a5bb8)';
                 let selectedIcon = svgIcons.sun;
 
                 if (code === 0) { // Clear Sky
                     if (isDay) {
-                        themeGradient = 'linear-gradient(135deg, #2575fc, #1a5bb8)';
+                        themeGradient = 'linear-gradient(135deg, #2575fc, #1a5bb8)'; // Bright sky blue
                         selectedIcon = svgIcons.sun;
                     } else {
-                        themeGradient = 'linear-gradient(135deg, #0f172a, #1e293b)';
+                        themeGradient = 'linear-gradient(135deg, #0f172a, #1e293b)'; // Midnight dark
                         selectedIcon = svgIcons.moon;
                     }
                 } else if (code >= 1 && code <= 2) { // Mainly Clear / Partly Cloudy
                     if (isDay) {
-                        themeGradient = 'linear-gradient(135deg, #3b82f6, #1d4ed8)';
+                        themeGradient = 'linear-gradient(135deg, #3b82f6, #1d4ed8)'; // Mild day blue
                         selectedIcon = svgIcons.cloudSun;
                     } else {
-                        themeGradient = 'linear-gradient(135deg, #1e293b, #334155)';
+                        themeGradient = 'linear-gradient(135deg, #1e293b, #334155)'; // Mild night slate
                         selectedIcon = svgIcons.cloudMoon;
                     }
                 } else if (code === 3) { // Overcast
-                    themeGradient = 'linear-gradient(135deg, #475569, #334155)';
+                    themeGradient = 'linear-gradient(135deg, #475569, #334155)'; // Dark slate gray
                     selectedIcon = svgIcons.cloud;
                 } else if (code === 45 || code === 48) { // Fog
-                    themeGradient = 'linear-gradient(135deg, #52525b, #3f3f46)';
+                    themeGradient = 'linear-gradient(135deg, #52525b, #3f3f46)'; // Dim gray
                     selectedIcon = svgIcons.fog;
                 } else if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) { // Drizzle & Rain
-                    themeGradient = 'linear-gradient(135deg, #1e3a8a, #0f172a)';
+                    themeGradient = 'linear-gradient(135deg, #1e3a8a, #0f172a)'; // Deep rain blue/black
                     selectedIcon = svgIcons.rain;
                 } else if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) { // Snow
-                    themeGradient = 'linear-gradient(135deg, #0284c7, #0369a1)';
+                    themeGradient = 'linear-gradient(135deg, #0284c7, #0369a1)'; // Light snow cyan
                     selectedIcon = svgIcons.snow;
                 } else if (code >= 95) { // Thunderstorm
-                    themeGradient = 'linear-gradient(135deg, #311b92, #1a237e)';
+                    themeGradient = 'linear-gradient(135deg, #311b92, #1a237e)'; // Dark purple/navy
                     selectedIcon = svgIcons.thunderstorm;
                 }
 
@@ -194,6 +197,7 @@
                 document.getElementById('icon').innerHTML = selectedIcon;
 
             } catch (err) {
+                // Fallback on error
                 document.getElementById('temp').innerText = '--°';
                 document.getElementById('icon').innerHTML = svgIcons.cloud;
             }
