@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="referrer" content="no-referrer">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notion Time & Weather</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: transparent;
+            color: #37352f;
+        }
+        .time {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+        .weather {
+            font-size: 1.25rem;
+            margin-top: 8px;
+            color: #787774;
+        }
+        @media (prefers-color-scheme: dark) {
+            body { color: rgba(255, 255, 255, 0.9); }
+            .weather { color: rgba(255, 255, 255, 0.5); }
+        }
+    </style>
+</head>
+<body>
+    <div class="time" id="time">00:00</div>
+    <div class="weather" id="weather">Acquiring meteorological data...</div>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('time').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        async function fetchWeather() {
+            try {
+                // Coordinates pre-configured for Courtenay, BC
+                const lat = 49.6866;
+                const lon = -124.9936;
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+                const data = await res.json();
+                const temp = Math.round(data.current_weather.temperature);
+                
+                const weatherCodes = {
+                    0: "Clear sky ☀️", 1: "Mainly clear 🌤️️", 2: "Partly cloudy ⛅", 3: "Overcast ☁️",
+                    45: "Fog 🌫️", 48: "Depositing rime fog 🌫️", 51: "Light drizzle 🌧️", 53: "Moderate drizzle 🌧️️",
+                    55: "Dense drizzle 🌧️", 61: "Light rain ☔", 63: "Moderate rain ☔", 65: "Heavy rain ☔",
+                    71: "Light snow ❄️", 73: "Moderate snow ❄️", 75: "Heavy snow ❄️", 95: "Thunderstorm ⛈️"
+                };
+                
+                const code = data.current_weather.weathercode;
+                const condition = weatherCodes[code] || "";
+                document.getElementById('weather').innerText = `${temp}°C | ${condition}`;
+            } catch (e) {
+                document.getElementById('weather').innerText = 'Weather currently unavailable';
+            }
+        }
+        fetchWeather();
+        setInterval(fetchWeather, 1800000); // Refreshes every 30 minutes
+    </script>
+</body>
+</html>
